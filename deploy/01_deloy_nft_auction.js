@@ -11,7 +11,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
 
     const NFTAuction = await ethers.getContractFactory("NFTAuction")
 
-    // 通过代理合约部署，指定初始化函数
+    // 通过代理合约部署，指定初始化函数..
     const proxy = await upgrades.deployProxy(NFTAuction, [], { initializer: 'initialize' });
     await proxy.waitForDeployment();
 
