@@ -3,6 +3,7 @@ pragma solidity ^0.8;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
 contract NFTAuctionV2 is Initializable, UUPSUpgradeable {
     // 结构体
@@ -49,8 +50,10 @@ contract NFTAuctionV2 is Initializable, UUPSUpgradeable {
         // 只有管理员可以创建拍卖
         require(msg.sender == admin, "Only admin can create an auction");
         // 检查参数
-        require(_duration > 1000 * 60, "Duration must be greater than 1 hour");
+        require(_duration > 1000 * 8, "Duration must be greater than 8seconds");
         require(_startPrice > 0, "Start price must be greater than 0");
+
+        IERC721(_nftContract).approve(address(this), _nftId);
 
         auctions[nextAuctionId] = Auction({
             seller: _seller,
@@ -93,6 +96,31 @@ contract NFTAuctionV2 is Initializable, UUPSUpgradeable {
         // 更新最高出价
         auctions[_auctionId].highestBid = msg.value;
         auctions[_auctionId].highestBidder = msg.sender;
+    }
+
+    // 结束拍卖
+    function endAuction(uint256 _auctionId) public {
+        Auction memory auction = auctions[_auctionId];
+        // 只有管理员可以结束拍卖
+        require(msg.sender == admin, "Only admin can end an auction");
+        // 检查拍卖是否存在
+        require(auction.ended == false, "Auction is over");
+        // 检查拍卖是否结束
+        require(
+            block.timestamp < auction.startTime + auction.duration,
+            "Auction is over"
+        );
+        // 转移NFT到价高者
+        IERC721(auction.nftContract).transferFrom(
+            address(this),
+            auction.highestBidder,
+            auction.nftId
+        );
+        // 转移资金到卖家
+        payable(address(this)).transfer(address(this).balance);
+
+        // 更新拍卖状态
+        auction.ended = true;
     }
 
     function _authorizeUpgrade(address) internal view override {

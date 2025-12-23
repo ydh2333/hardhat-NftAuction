@@ -15,9 +15,11 @@
     "hardhat-deploy": "^1.0.4"
   },
   "dependencies": {
+    "@chainlink/contracts": "^1.5.0",
     "@openzeppelin/contracts-upgradeable": "^5.4.0",
     "@openzeppelin/hardhat-upgrades": "^3.9.1",
     "@remix-project/remixd": "^0.6.59",
+    "dotenv": "^17.2.3",
     "mocha": "^11.7.5"
   }
 }
