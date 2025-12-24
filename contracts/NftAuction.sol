@@ -81,14 +81,14 @@ contract NFTAuction is Initializable, UUPSUpgradeable, IERC721Receiver {
 
         // 校验卖家是否已授权拍卖合约操作该 NFT
         IERC721 nftContract = IERC721(_nftContract);
-        // 检查授权：要么拍卖合约是授权操作员，要么卖家是当前调用者（持有者可直接转）
+        // 检查授权：合约被授权操作该 NFT 或者 _seller 是 NFT 所有者
         require(
             nftContract.getApproved(_nftId) == address(this) ||
-                nftContract.ownerOf(_nftId) == msg.sender,
+                nftContract.ownerOf(_nftId) == _seller,
             "Auction contract not approved to transfer NFT"
         );
 
-        IERC721(_nftContract).safeTransferFrom(_seller, address(this), _nftId);
+        nftContract.safeTransferFrom(_seller, address(this), _nftId);
 
         auctions[nextAuctionId] = Auction({
             seller: _seller,
@@ -122,7 +122,7 @@ contract NFTAuction is Initializable, UUPSUpgradeable, IERC721Receiver {
 
         uint256 payvalue;
         if (_tokenAddress == address(0)) {
-            _amount = msg.value;
+            require(_amount == msg.value, "ETH amount must match msg.value");
         }
 
         // 当前竞价
@@ -143,12 +143,14 @@ contract NFTAuction is Initializable, UUPSUpgradeable, IERC721Receiver {
 
         // 检查是否是erc20资产
         if (_tokenAddress != address(0)) {
-            // 转移erc20到合约
-            IERC20(_tokenAddress).transferFrom(
-                msg.sender,
-                address(this),
-                _amount
+            IERC20 token = IERC20(_tokenAddress);
+            // 检查竞拍者已授权合约至少 _amount 数量的代币
+            require(
+                token.allowance(msg.sender, address(this)) >= _amount,
+                "ERC20: Insufficient allowance"
             );
+            // 转移erc20到合约
+            token.transferFrom(msg.sender, address(this), _amount);
         }
         // 退还逻辑，判断之前的最高者是什么资产
         if (auction.tokenAddress == address(0)) {
