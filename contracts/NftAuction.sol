@@ -5,7 +5,7 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol";
 
 contract NFTAuction is Initializable, UUPSUpgradeable, IERC721Receiver {
@@ -19,6 +19,8 @@ contract NFTAuction is Initializable, UUPSUpgradeable, IERC721Receiver {
         uint256 startTime;
         // 起始价格
         uint256 startPrice;
+        // 起始货币类型
+        address startTokenAddress;
         // 是否结束
         bool ended;
         // 最高价格
@@ -41,6 +43,37 @@ contract NFTAuction is Initializable, UUPSUpgradeable, IERC721Receiver {
     address public admin;
 
     mapping(address => AggregatorV3Interface) public priceFeeds;
+    // 语言机小数位映射
+    mapping(address => uint8) public priceFeedDecimals;
+
+    // 创建拍卖事件
+    event CreateAuction(
+        uint256 auctionId,
+        address seller,
+        uint256 duration,
+        uint256 startPrice,
+        address startTokenAddress,
+        uint256 startTime,
+        address nftContract,
+        uint256 nftId,
+        uint256 optTime
+    );
+    // 竞拍事件
+    event PlaceBid(
+        uint256 auctionId,
+        address bidder,
+        uint256 amount,
+        address tokenAddress,
+        uint256 optTime
+    );
+    // 结束拍卖事件
+    event EndAuction(
+        uint256 auctionId,
+        address winner,
+        uint256 amount,
+        address tokenAddress,
+        uint256 optTime
+    );
 
     function initialize() public initializer {
         admin = msg.sender;
@@ -52,7 +85,11 @@ contract NFTAuction is Initializable, UUPSUpgradeable, IERC721Receiver {
         address _tokenAddress,
         address _priceFeedAddress
     ) public {
-        priceFeeds[_tokenAddress] = AggregatorV3Interface(_priceFeedAddress);
+        AggregatorV3Interface priceFeed = AggregatorV3Interface(
+            _priceFeedAddress
+        );
+        priceFeeds[_tokenAddress] = priceFeed;
+        priceFeedDecimals[_tokenAddress] = priceFeed.decimals(); // 存储小数位
     }
 
     // 3. 实现 onERC721Received（核心！）
@@ -94,6 +131,7 @@ contract NFTAuction is Initializable, UUPSUpgradeable, IERC721Receiver {
             seller: _seller,
             duration: _duration,
             startPrice: _startPrice,
+            startTokenAddress: address(0), // 初始化默认为eth
             startTime: block.timestamp,
             ended: false,
             highestBid: 0,
@@ -102,6 +140,17 @@ contract NFTAuction is Initializable, UUPSUpgradeable, IERC721Receiver {
             nftId: _nftId,
             tokenAddress: address(0)
         });
+        emit CreateAuction(
+            nextAuctionId,
+            _seller,
+            _duration,
+            _startPrice,
+            address(0),
+            block.timestamp,
+            _nftContract,
+            _nftId,
+            block.timestamp
+        );
         nextAuctionId++;
     }
 
@@ -120,21 +169,22 @@ contract NFTAuction is Initializable, UUPSUpgradeable, IERC721Receiver {
             "Auction is over"
         );
 
-        uint256 payvalue;
         if (_tokenAddress == address(0)) {
             require(_amount == msg.value, "ETH amount must match msg.value");
         }
 
         // 当前竞价
-        payvalue =
-            _amount *
-            uint256(getChainlinkDataFeedLatestAnswer(_tokenAddress));
+        uint256 payvalue = calculateValue(_amount, _tokenAddress);
         // 起拍价
-        uint256 startPriceValue = auction.startPrice *
-            uint256(getChainlinkDataFeedLatestAnswer(auction.tokenAddress));
+        uint256 startPriceValue = calculateValue(
+            auction.startPrice,
+            auction.startTokenAddress
+        );
         // 最高价
-        uint256 highestBidValue = auction.highestBid *
-            uint256(getChainlinkDataFeedLatestAnswer(auction.tokenAddress));
+        uint256 highestBidValue = calculateValue(
+            auction.highestBid,
+            auction.tokenAddress
+        );
         // 检查价格
         require(
             payvalue >= startPriceValue && payvalue > highestBidValue,
@@ -172,6 +222,14 @@ contract NFTAuction is Initializable, UUPSUpgradeable, IERC721Receiver {
         auction.tokenAddress = _tokenAddress;
         auction.highestBid = _amount;
         auction.highestBidder = msg.sender;
+
+        emit PlaceBid(
+            _auctionId,
+            msg.sender,
+            _amount,
+            _tokenAddress,
+            block.timestamp
+        );
     }
 
     // 结束拍卖
@@ -218,6 +276,14 @@ contract NFTAuction is Initializable, UUPSUpgradeable, IERC721Receiver {
                 auction.highestBid
             );
         }
+
+        emit EndAuction(
+            _auctionId,
+            auction.highestBidder,
+            auction.highestBid,
+            auction.tokenAddress,
+            block.timestamp
+        );
     }
 
     function _authorizeUpgrade(address) internal view override {
@@ -241,5 +307,27 @@ contract NFTAuction is Initializable, UUPSUpgradeable, IERC721Receiver {
         /*uint80 answeredInRound*/
         ) = priceFeed.latestRoundData();
         return answer;
+    }
+
+    function calculateValue(
+        uint256 _amount,
+        address _tokenAddress
+    ) public view returns (uint256) {
+        uint8 tokenDecimals;
+        if (_tokenAddress == address(0)) {
+            tokenDecimals = 18;
+        } else {
+            tokenDecimals = IERC20Metadata(_tokenAddress).decimals();
+        }
+
+        uint8 feedDecimals = priceFeedDecimals[_tokenAddress];
+        int256 answer = getChainlinkDataFeedLatestAnswer(_tokenAddress);
+
+        // 1、将_amount换算为18位小数
+        uint256 amount18Dec = _amount * 10 ** (18 - tokenDecimals);
+        // 2、将语言机换算为18位小数
+        uint256 answer18Dec = uint256(answer) * 10 ** (18 - feedDecimals);
+        // 3、计算实际价格
+        return (amount18Dec * answer18Dec) / 10 ** 18;
     }
 }

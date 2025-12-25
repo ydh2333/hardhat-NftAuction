@@ -5,9 +5,9 @@ const path = require('path');
 
 module.exports = async ({ getNamedAccounts, deployments }) => {
     const { save } = deployments;
-    const { deployer } = await getNamedAccounts();
-    console.log("部署用户地址：", deployer);
-    console.log("----------------------------------------------------------------------------")
+    // const { deployer } = await getNamedAccounts();
+    // console.log("部署用户地址：", deployer);
+    // console.log("----------------------------------------------------------------------------")
 
     const storePath = path.resolve(__dirname, './.cache/proxyNftAuction.json');
     const data = JSON.parse(fs.readFileSync(storePath));

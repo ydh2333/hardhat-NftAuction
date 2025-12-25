@@ -5,9 +5,9 @@ const path = require('path');
 // deploy/00_deploy_my_contract.js
 module.exports = async ({ getNamedAccounts, deployments }) => {
     const { save } = deployments;
-    const { deployer } = await getNamedAccounts();
-    console.log("部署用户地址：", deployer);
-    console.log("----------------------------------------------------------------------------")
+    // const { deployer } = await getNamedAccounts();
+    // console.log("部署用户地址：", deployer);
+    // console.log("----------------------------------------------------------------------------")
 
     const NFTAuction = await ethers.getContractFactory("NFTAuction")
 
