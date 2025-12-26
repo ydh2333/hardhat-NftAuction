@@ -9,7 +9,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
     const myNFTWithMetadata = await MyNft721.deploy();
     await myNFTWithMetadata.waitForDeployment();
 
-    console.log("NFTcontract has been deployed succcessful, contract address is:", myNFTWithMetadata.target)
+    console.log("MyNFTWithMetadata has been deployed succcessful, contract address is:", myNFTWithMetadata.target)
 
     await save("MyNFTWithMetadata", {
         abi: MyNft721.interface.format('json'),
@@ -18,3 +18,4 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
 
 
 }
+module.exports.tags = ['MyNFTWithMetadata'];  

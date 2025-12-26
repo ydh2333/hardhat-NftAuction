@@ -48,7 +48,7 @@ contract NFTAuctionV2 is Initializable, UUPSUpgradeable, IERC721Receiver {
 
     // 创建拍卖事件
     event CreateAuction(
-        uint256 auctionId,
+        uint256 indexed auctionId,
         address seller,
         uint256 duration,
         uint256 startPrice,
@@ -60,7 +60,7 @@ contract NFTAuctionV2 is Initializable, UUPSUpgradeable, IERC721Receiver {
     );
     // 竞拍事件
     event PlaceBid(
-        uint256 auctionId,
+        uint256 indexed auctionId,
         address bidder,
         uint256 amount,
         address tokenAddress,
@@ -68,7 +68,7 @@ contract NFTAuctionV2 is Initializable, UUPSUpgradeable, IERC721Receiver {
     );
     // 结束拍卖事件
     event EndAuction(
-        uint256 auctionId,
+        uint256 indexed auctionId,
         address winner,
         uint256 amount,
         address tokenAddress,
@@ -92,7 +92,7 @@ contract NFTAuctionV2 is Initializable, UUPSUpgradeable, IERC721Receiver {
         priceFeedDecimals[_tokenAddress] = priceFeed.decimals(); // 存储小数位
     }
 
-    // 3. 实现 onERC721Received（核心！）
+    // 实现 onERC721Received
     function onERC721Received(
         address,
         address,

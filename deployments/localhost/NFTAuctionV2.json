@@ -1,5 +1,5 @@
 {
-  "address": "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
+  "address": "0xf9D10528B5b1837cd12be6A449475a1288832263",
   "abi": [
     "error AddressEmptyCode(address)",
     "error ERC1967InvalidImplementation(address)",
@@ -9,11 +9,15 @@
     "error NotInitializing()",
     "error UUPSUnauthorizedCallContext()",
     "error UUPSUnsupportedProxiableUUID(bytes32)",
+    "event CreateAuction(uint256 indexed,address,uint256,uint256,address,uint256,address,uint256,uint256)",
+    "event EndAuction(uint256 indexed,address,uint256,address,uint256)",
     "event Initialized(uint64)",
+    "event PlaceBid(uint256 indexed,address,uint256,address,uint256)",
     "event Upgraded(address indexed)",
     "function UPGRADE_INTERFACE_VERSION() view returns (string)",
     "function admin() view returns (address)",
-    "function auctions(uint256) view returns (address,uint256,uint256,uint256,bool,uint256,address,address,uint256,address)",
+    "function auctions(uint256) view returns (address,uint256,uint256,uint256,address,bool,uint256,address,address,uint256,address)",
+    "function calculateValue(uint256,address) view returns (uint256)",
     "function createAuction(address,uint256,uint256,address,uint256)",
     "function endAuction(uint256)",
     "function getChainlinkDataFeedLatestAnswer(address) view returns (int256)",
@@ -21,11 +25,12 @@
     "function nextAuctionId() view returns (uint256)",
     "function onERC721Received(address,address,uint256,bytes) pure returns (bytes4)",
     "function placeBid(uint256,uint256,address) payable",
+    "function priceFeedDecimals(address) view returns (uint8)",
     "function priceFeeds(address) view returns (address)",
     "function proxiableUUID() view returns (bytes32)",
     "function setPriceETHFeed(address,address)",
     "function testHello() pure returns (string)",
     "function upgradeToAndCall(address,bytes) payable"
   ],
-  "numDeployments": 2
+  "numDeployments": 1
 }

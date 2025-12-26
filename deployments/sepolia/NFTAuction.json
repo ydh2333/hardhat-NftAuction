@@ -1,5 +1,5 @@
 {
-  "address": "0xf9D10528B5b1837cd12be6A449475a1288832263",
+  "address": "0xBE0Baa8fA3dB02F81Cdb614Fc132449b7A736774",
   "abi": [
     "error AddressEmptyCode(address)",
     "error ERC1967InvalidImplementation(address)",
@@ -31,5 +31,5 @@
     "function setPriceETHFeed(address,address)",
     "function upgradeToAndCall(address,bytes) payable"
   ],
-  "numDeployments": 1
+  "numDeployments": 2
 }

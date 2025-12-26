@@ -1,0 +1,269 @@
+{
+  "manifestVersion": "3.2",
+  "proxies": [
+    {
+      "address": "0xfbeD55F894ebaE79A4E91d2eDa621802e5c4b049",
+      "txHash": "0x71fe923e6aac0d75284ec18691320562caa257f9d5ace53e91e0c9582b669275",
+      "kind": "uups"
+    },
+    {
+      "address": "0xBE0Baa8fA3dB02F81Cdb614Fc132449b7A736774",
+      "txHash": "0x74d88ec5ad9fa87182a0253c5dd019093dc361789f46309706d6894765eb6192",
+      "kind": "uups"
+    },
+    {
+      "address": "0xe1c7b5532aF3209314C8768790430e4221A390d9",
+      "txHash": "0x44600a36c9a124f96d50ed13814697042e1de2cbe3da9926b879cc1721c7fea8",
+      "kind": "uups"
+    },
+    {
+      "address": "0x2c88463Be32e1C423042A6Bd97f57593c1C83742",
+      "txHash": "0xe6453e7a156614a4bc0902b64a755f281d52137c975ab625306a02718775dee8",
+      "kind": "uups"
+    },
+    {
+      "address": "0x4F94653d6577449178541E5396227A98d71d55bD",
+      "txHash": "0x11405efcbd19e5b8a30f538d47343f2977718f0ba69d349f4cfd71174a9c0806",
+      "kind": "uups"
+    },
+    {
+      "address": "0xb5c6F0741023f0AE2edbF3f9c3bFfd959C435D47",
+      "txHash": "0xbf2deee2f80029b74f55dbcdda78c92541bb55604982deb73f11e68f9213e07e",
+      "kind": "uups"
+    },
+    {
+      "address": "0x0140b795743C574c348385431962e07510b819a2",
+      "txHash": "0x8c8beae69ee6c4f5f5bf4a8b85ca47b5b81871d5baf12d05b86adbc72c0e713c",
+      "kind": "uups"
+    },
+    {
+      "address": "0x48ec8aF0700B4FCFb23F5bfeF05cE08ff7D20B86",
+      "txHash": "0x3b6d105d7c9871babc23b9ccce9b5c792b748991f18e5992805c8fbfe7512f3c",
+      "kind": "uups"
+    },
+    {
+      "address": "0xD9F82CB349122ec0cB5e1BE52501bE8a45ACB0f4",
+      "txHash": "0xc2f98589b77999ae87aab07d50e41138537d08f4e4e2fa3c5f7ede5ab3b97612",
+      "kind": "uups"
+    },
+    {
+      "address": "0x7a0E2855af57599fCE282261193C4b558b367058",
+      "txHash": "0x41127bbc3a1db488e1f193b92224957a328a125cceb71697b3189b2c3fc15dcd",
+      "kind": "uups"
+    },
+    {
+      "address": "0x86123F57E3f02ad5f3aAA79b87B1b2DeEe1A2f94",
+      "txHash": "0x55fc8cdce01d0725f862396134a2626e84f1e4646698fb222ce97d5f0ab66b24",
+      "kind": "uups"
+    },
+    {
+      "address": "0x2C97d03FB6550D528839561C85dc23a88d80F1dD",
+      "txHash": "0xe8ec108a0a6eafc4f19c0289223b24179a61f7db561a531c08737e1a922f5ef8",
+      "kind": "uups"
+    },
+    {
+      "address": "0x8541BDeB380aC867E1eDa396Ef2487827b8AB2b0",
+      "txHash": "0x408bf5b95146c4bf4fbcb83d6c45aaffd3e238c13018728d3f5c632ee834c2aa",
+      "kind": "uups"
+    }
+  ],
+  "impls": {
+    "29a434d5bf96b8bf8e5faa50efea7d79dbdccac4f826c2c433784345c74c00c8": {
+      "address": "0x9a806d0874FF3A324E7a75a84024763881E03A07",
+      "txHash": "0xac3825fb665eb4a04073f2a1f4cab538ad303e1197dc62cc5c980923bff76b13",
+      "layout": {
+        "solcVersion": "0.8.28",
+        "storage": [
+          {
+            "label": "auctions",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_mapping(t_uint256,t_struct(Auction)7762_storage)",
+            "contract": "NFTAuction",
+            "src": "contracts/NftAuction.sol:45"
+          },
+          {
+            "label": "nextAuctionId",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_uint256",
+            "contract": "NFTAuction",
+            "src": "contracts/NftAuction.sol:46"
+          },
+          {
+            "label": "admin",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_address",
+            "contract": "NFTAuction",
+            "src": "contracts/NftAuction.sol:47"
+          },
+          {
+            "label": "priceFeeds",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_mapping(t_address,t_contract(AggregatorV3Interface)45)",
+            "contract": "NFTAuction",
+            "src": "contracts/NftAuction.sol:50"
+          },
+          {
+            "label": "priceFeedDecimals",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_mapping(t_address,t_uint8)",
+            "contract": "NFTAuction",
+            "src": "contracts/NftAuction.sol:53"
+          }
+        ],
+        "types": {
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_struct(InitializableStorage)53_storage": {
+            "label": "struct Initializable.InitializableStorage",
+            "members": [
+              {
+                "label": "_initialized",
+                "type": "t_uint64",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "_initializing",
+                "type": "t_bool",
+                "offset": 8,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_uint64": {
+            "label": "uint64",
+            "numberOfBytes": "8"
+          },
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_contract(AggregatorV3Interface)45": {
+            "label": "contract AggregatorV3Interface",
+            "numberOfBytes": "20"
+          },
+          "t_mapping(t_address,t_contract(AggregatorV3Interface)45)": {
+            "label": "mapping(address => contract AggregatorV3Interface)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_uint8)": {
+            "label": "mapping(address => uint8)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(Auction)7762_storage)": {
+            "label": "mapping(uint256 => struct NFTAuction.Auction)",
+            "numberOfBytes": "32"
+          },
+          "t_struct(Auction)7762_storage": {
+            "label": "struct NFTAuction.Auction",
+            "members": [
+              {
+                "label": "seller",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "duration",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "startTime",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "startPrice",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "startTokenAddress",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "ended",
+                "type": "t_bool",
+                "offset": 20,
+                "slot": "4"
+              },
+              {
+                "label": "highestBid",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "5"
+              },
+              {
+                "label": "highestBidder",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "6"
+              },
+              {
+                "label": "nftContract",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "7"
+              },
+              {
+                "label": "nftId",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "8"
+              },
+              {
+                "label": "tokenAddress",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "9"
+              }
+            ],
+            "numberOfBytes": "320"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        },
+        "namespaces": {
+          "erc7201:openzeppelin.storage.Initializable": [
+            {
+              "contract": "Initializable",
+              "label": "_initialized",
+              "type": "t_uint64",
+              "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:69",
+              "offset": 0,
+              "slot": "0"
+            },
+            {
+              "contract": "Initializable",
+              "label": "_initializing",
+              "type": "t_bool",
+              "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:73",
+              "offset": 8,
+              "slot": "0"
+            }
+          ]
+        }
+      }
+    }
+  }
+}
